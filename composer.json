@@ -1,0 +1,67 @@
+{
+    "name": "pimphand/gdrive",
+    "description": "Laravel Google Drive storage package with S3-style API, OAuth, streaming upload/download, and quota sync.",
+    "version": "1.0.0",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "laravel",
+        "google-drive",
+        "google",
+        "storage",
+        "oauth",
+        "cloud-storage",
+        "flysystem",
+        "s3"
+    ],
+    "authors": [
+        {
+            "name": "Pimphand",
+            "homepage": "https://github.com/pimphand"
+        }
+    ],
+    "homepage": "https://github.com/pimphand/gdrive",
+    "require": {
+        "php": "^8.2",
+        "google/apiclient": "^2.18",
+        "guzzlehttp/guzzle": "^7.8",
+        "illuminate/console": "^11.0|^12.0|^13.0",
+        "illuminate/support": "^11.0|^12.0|^13.0",
+        "symfony/http-foundation": "^6.4|^7.0|^8.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0|^10.0|^11.0",
+        "phpunit/phpunit": "^11.0|^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Pimphand\\GDrive\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Pimphand\\GDrive\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Pimphand\\GDrive\\GDriveServiceProvider"
+            ],
+            "aliases": {
+                "GDrive": "Pimphand\\GDrive\\Facades\\GDrive"
+            }
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

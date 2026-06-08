@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docs — pimphand/gdrive</title>
+    <meta name="description" content="Laravel Google Drive storage package">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html { scroll-behavior: smooth; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        [lang-content] { display: none; }
+        [lang-content].active { display: block; }
+        .sidebar-link.active {
+            color: #2563eb;
+            border-left-color: #2563eb;
+            background: #fff;
+            font-weight: 500;
+        }
+        .prose p { margin-bottom: 1rem; line-height: 1.7; color: #4b5563; }
+        .prose h2 { font-size: 1.35rem; font-weight: 600; color: #111827; margin: 2.5rem 0 1rem; padding-bottom: .5rem; border-bottom: 1px solid #e5e7eb; }
+        .prose h3 { font-size: 1rem; font-weight: 600; color: #1f2937; margin: 1.75rem 0 .5rem; }
+        .prose ul, .prose ol { margin: 0 0 1rem 1.25rem; color: #4b5563; line-height: 1.7; }
+        .prose li { margin: .35rem 0; }
+        .prose a { color: #2563eb; }
+        .prose a:hover { text-decoration: underline; }
+        .prose code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: .85em;
+            background: #f3f4f6;
+            padding: .15em .4em;
+            border-radius: 3px;
+            color: #1f2937;
+        }
+        .prose pre {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 1rem 1.15rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: .75rem 0 1.25rem;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .prose pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+        .prose table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 1rem 0; }
+        .prose th, .prose td { border: 1px solid #e5e7eb; padding: .5rem .75rem; text-align: left; vertical-align: top; }
+        .prose th { background: #f9fafb; font-weight: 600; color: #374151; }
+        .prose td { color: #4b5563; }
+        .prose .note { border-left: 3px solid #d1d5db; padding-left: 1rem; color: #6b7280; font-size: 14px; margin: 1rem 0; }
+        .lang-on { color: #2563eb; font-weight: 500; }
+        .lang-off { color: #9ca3af; }
+        .lang-off:hover { color: #4b5563; }
+    </style>
+</head>
+<body class="bg-white text-gray-800 antialiased">
+
+    <header class="sticky top-0 z-50 bg-white border-b border-gray-200">
+        <div class="max-w-6xl mx-auto flex items-center justify-between h-[52px] px-4 sm:px-6">
+            <div class="flex items-center gap-5 min-w-0">
+                <button id="sidebar-toggle" type="button" class="lg:hidden shrink-0 p-1 text-gray-500 hover:text-gray-800" aria-label="Menu">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <a href="#" class="flex items-center gap-2 no-underline text-gray-900 shrink-0">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M7.5 4.5 3 8.25v9.75L7.5 21.75h9L21 18V8.25L16.5 4.5h-9Z" stroke="#2563eb" stroke-width="1.5"/>
+                        <path d="M3 8.25h18M8.25 8.25V21.75" stroke="#2563eb" stroke-width="1.5"/>
+                    </svg>
+                    <span class="font-semibold text-[15px]">gdrive</span>
+                </a>
+                <nav class="hidden sm:flex items-center gap-4 text-sm">
+                    <span class="text-blue-600 border-b-2 border-blue-600 pb-[15px] -mb-[17px]">Docs</span>
+                    <a href="https://github.com/pimphand/gdrive" class="text-gray-500 hover:text-gray-800 no-underline" target="_blank" rel="noopener">GitHub</a>
+                </nav>
+            </div>
+            <div class="flex items-center gap-4 text-sm">
+                <input id="doc-search" type="search" placeholder="Search" class="hidden sm:block w-36 border border-gray-300 rounded px-2.5 py-1 text-sm focus:outline-none focus:border-blue-400">
+                <span class="hidden md:inline text-gray-400 text-xs">v1.0.0</span>
+                <span class="text-gray-300">|</span>
+                <button type="button" data-lang="en" class="lang-btn lang-on bg-transparent border-0 cursor-pointer text-sm p-0">EN</button>
+                <button type="button" data-lang="id" class="lang-btn lang-off bg-transparent border-0 cursor-pointer text-sm p-0">ID</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-6xl mx-auto flex">
+
+        <!-- Sidebar EN -->
+        <aside id="sidebar-en" class="lang-sidebar hidden lg:block w-[220px] shrink-0 sticky top-[52px] h-[calc(100vh-52px)] overflow-y-auto border-r border-gray-200 py-6 pl-4 pr-2 text-[13px]">
+            <nav class="space-y-0.5">
+                <p class="px-2 pt-2 pb-1 text-xs text-gray-400">Start here</p>
+                <a href="#en-intro" class="sidebar-link block px-2 py-1.5 border-l-2 border-transparent text-gray-600 hover:text-gray-900 no-underline">Introduction</a>
+                <a href="#en-quickstart" class="sidebar-link block px-2 py-1.5 border-l-2 border-transparent text-gray-600 hover:text-gray-900 no-underline">Quick start</a>
+                <a href="#en-install" class="sidebar-link block px-2 py-1.5 border-l-2 border-transparent text-gray-600 hover:text-gray-900 no-underline">Installation</a>
+                <a href="#en-google" class="sidebar-link block px-2 py-1.5 border-l-2 border-transparent text-gray-600 hover:text-gray-900 no-underline">Google Cloud</a>
+                <a href="#en-env" class="sidebar-link block px-2 py-1.5 border-l-2 border-transparent text-gray-600 hover:text-gray-900 no-underline">Environment</a>
+                <p class="px-2 pt-4 pb-1 text-xs text-gray-400">Usage</p>
+                <a href="#en-php" class="sidebar-link block px-2 py-1.5 border-l-2 border-transparent text-gray-600 hover:text-gray-900 no-underline">PHP</a>
+                <a href="#en-js" class="sidebar-link block px-2 py-1.5 border-l-2 border-transparent text-gray-600 hover:text-gray-900 no-underline">JavaScript</a>
+                <a href="#en-api" class="sidebar-link block px-2 py-1.5 border-l-2 border-transparent text-gray-600 hover:text-gray-900 no-underline">HTTP API</a>
+                <p class="px-2 pt-4 pb-1 text-xs text-gray-400">Other</p>
+                <a href="#en-security" class="sidebar-link block px-2 py-1.5 border-l-2 border-transparent text-gray-600 hover:text-gray-900 no-underline">Security</a>
+            </nav>
+        </aside>
+
+        <!-- Sidebar ID -->
+        <aside id="sidebar-id" class="lang-sidebar hidden w-[220px] shrink-0 sticky top-[52px] h-[calc(100vh-52px)] overflow-y-auto border-r border-gray-200 py-6 pl-4 pr-2 text-[13px]">
+            <nav class="space-y-0.5">
+                <p class="px-2 pt-2 pb-1 text-xs text-gray-400">Awal</p>
+                <a href="#id-intro" class="sidebar-link block px-2 py-1.5 border-l-2 border-transparent text-gray-600 hover:text-gray-900 no-underline">Pengenalan</a>
+                <a href="#id-quickstart" class="sidebar-link block px-2 py-1.5 border-l-2 border-transparent text-gray-600 hover:text-gray-900 no-underline">Mulai cepat</a>
+                <a href="#id-install" class="sidebar-link block px-2 py-1.5 border-l-2 border-transparent text-gray-600 hover:text-gray-900 no-underline">Instalasi</a>
+                <a href="#id-google" class="sidebar-link block px-2 py-1.5 border-l-2 border-transparent text-gray-600 hover:text-gray-900 no-underline">Google Cloud</a>
+                <a href="#id-env" class="sidebar-link block px-2 py-1.5 border-l-2 border-transparent text-gray-600 hover:text-gray-900 no-underline">Environment</a>
+                <p class="px-2 pt-4 pb-1 text-xs text-gray-400">Penggunaan</p>
+                <a href="#id-php" class="sidebar-link block px-2 py-1.5 border-l-2 border-transparent text-gray-600 hover:text-gray-900 no-underline">PHP</a>
+                <a href="#id-js" class="sidebar-link block px-2 py-1.5 border-l-2 border-transparent text-gray-600 hover:text-gray-900 no-underline">JavaScript</a>
+                <a href="#id-api" class="sidebar-link block px-2 py-1.5 border-l-2 border-transparent text-gray-600 hover:text-gray-900 no-underline">HTTP API</a>
+                <p class="px-2 pt-4 pb-1 text-xs text-gray-400">Lainnya</p>
+                <a href="#id-security" class="sidebar-link block px-2 py-1.5 border-l-2 border-transparent text-gray-600 hover:text-gray-900 no-underline">Keamanan</a>
+            </nav>
+        </aside>
+
+        <aside id="sidebar-mobile" class="lg:hidden fixed top-[52px] left-0 w-[220px] h-[calc(100vh-52px)] overflow-y-auto bg-white border-r border-gray-200 z-40 -translate-x-full transition-transform py-6 pl-4 pr-2 text-[13px]">
+            <nav id="sidebar-mobile-nav"></nav>
+        </aside>
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black/20 z-30 hidden lg:hidden"></div>
+
+        <!-- EN content -->
+        <main lang-content="en" class="active flex-1 min-w-0">
+            <article class="prose max-w-none px-5 sm:px-8 py-8 pb-16">
+
+                <section id="en-intro" class="doc-section scroll-mt-16">
+                    <h1 class="text-2xl font-semibold text-gray-900 mb-3">Introduction</h1>
+                    <p><code>pimphand/gdrive</code> connects Laravel to Google Drive. Upload, download, list, and delete files through a small API similar to S3. OAuth handles auth; uploads can stream straight to Drive without touching your server disk.</p>
+                    <p class="text-sm text-gray-500">Requires PHP 8.2+, Laravel 11–13.</p>
+                </section>
+
+                <section id="en-quickstart" class="doc-section scroll-mt-16">
+                    <h2>Quick start</h2>
+                    <ol>
+                        <li><code>composer require pimphand/gdrive:^1.0</code></li>
+                        <li><code>php artisan vendor:publish --tag=gdrive-example</code></li>
+                        <li>Copy <code>gdrive.env.example</code> values into <code>.env</code></li>
+                        <li>Set redirect URI in Google Cloud Console</li>
+                        <li><code>php artisan serve</code> → visit <code>/gdrive</code> → connect Drive</li>
+                    </ol>
+                    <p class="note">Routes from the example load automatically. You don't need to edit <code>routes/web.php</code>.</p>
+                </section>
+
+                <section id="en-install" class="doc-section scroll-mt-16">
+                    <h2>Installation</h2>
+                    <h3>From Packagist</h3>
+                    <pre><code>composer require pimphand/gdrive:^1.0</code></pre>
+                    <h3>Local path (development)</h3>
+                    <pre><code>{
+  "repositories": [{ "type": "path", "url": "../gdrive" }],
+  "require": { "pimphand/gdrive": "^1.0" }
+}</code></pre>
+                    <h3>Publish tags</h3>
+                    <table>
+                        <tr><th>Command</th><th>What you get</th></tr>
+                        <tr><td><code>--tag=gdrive-config</code></td><td><code>config/gdrive.php</code></td></tr>
+                        <tr><td><code>--tag=gdrive-example</code></td><td>Controllers, routes, views, JS demo</td></tr>
+                        <tr><td><code>gdrive:publish-example</code></td><td>Overwrite stubs after package update</td></tr>
+                    </table>
+                </section>
+
+                <section id="en-google" class="doc-section scroll-mt-16">
+                    <h2>Google Cloud</h2>
+                    <ol>
+                        <li><a href="https://console.cloud.google.com/" target="_blank" rel="noopener">console.cloud.google.com</a> → enable Drive API</li>
+                        <li>Credentials → OAuth client ID → Web application</li>
+                        <li>Add redirect: <code>http://localhost:8000/auth/google/callback</code></li>
+                    </ol>
+                </section>
+
+                <section id="en-env" class="doc-section scroll-mt-16">
+                    <h2>Environment</h2>
+                    <pre><code>GDRIVE_CLIENT_ID=
+GDRIVE_CLIENT_SECRET=
+GDRIVE_REDIRECT_URI=http://localhost:8000/auth/google/callback
+
+GDRIVE_APP_FOLDER=pimpdrive
+GDRIVE_TOKEN_ENCRYPTION_KEY=</code></pre>
+                    <p>Run <code>php artisan gdrive:seed-config</code> to check your setup.</p>
+                </section>
+
+                <section id="en-php" class="doc-section scroll-mt-16">
+                    <h2>PHP</h2>
+                    <pre><code>use Pimphand\GDrive\Facades\GDrive;
+
+$file = GDrive::put(
+    fileName: 'report.pdf',
+    body: fopen($path, 'r'),
+    mimeType: 'application/pdf',
+    sizeBytes: (string) filesize($path),
+);
+
+return GDrive::get($file['id']);
+GDrive::delete($file['id']);</code></pre>
+                    <p class="note">Save <code>$file['id']</code> in your DB. All physical files sit in one Drive folder per account (<code>pimpdrive</code> by default).</p>
+                </section>
+
+                <section id="en-js" class="doc-section scroll-mt-16">
+                    <h2>JavaScript</h2>
+                    <p>Browser uploads go through three steps: init session → send chunks → sync list.</p>
+                    <pre><code>POST /gdrive/api/upload/init
+POST /gdrive/api/upload/chunk   (repeat until complete)
+POST /gdrive/api/sync</code></pre>
+
+                    <h3>Config (from Blade)</h3>
+                    <pre><code>window.GDRIVE_DEMO = {
+  initUrl: '/gdrive/api/upload/init',
+  chunkUrl: '/gdrive/api/upload/chunk',
+  syncUrl: '/gdrive/api/sync',
+  chunkSize: 2 * 1024 * 1024,
+  csrf: document.querySelector('meta[name="csrf-token"]').content,
+};</code></pre>
+
+                    <h3>Upload one file</h3>
+                    <pre><code>async function uploadFile(file) {
+  const h = { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': GDRIVE_DEMO.csrf };
+
+  const session = await fetch(GDRIVE_DEMO.initUrl, {
+    method: 'POST', headers: h,
+    body: JSON.stringify({ name: file.name, mime_type: file.type, size: file.size }),
+  }).then(r => r.json());
+
+  let offset = 0;
+  while (offset &lt; file.size) {
+    const end = Math.min(offset + GDRIVE_DEMO.chunkSize, file.size);
+    const res = await fetch(GDRIVE_DEMO.chunkUrl, {
+      method: 'POST',
+      headers: { ...h, 'X-Upload-Url': session.upload_url,
+        'X-Content-Range': `bytes ${offset}-${end - 1}/${file.size}`,
+        'Content-Type': 'application/octet-stream' },
+      body: file.slice(offset, end),
+    }).then(r => r.json());
+    if (res.complete) break;
+    offset = end;
+  }
+}</code></pre>
+                    <p>See <code>public/js/gdrive-demo.js</code> for the full UI (drag-drop, folders, rename).</p>
+                    <p>Chunk requests need <code>X-Upload-Url</code> and <code>X-Content-Range</code> headers. All POST routes require CSRF.</p>
+                </section>
+
+                <section id="en-api" class="doc-section scroll-mt-16">
+                    <h2>HTTP API</h2>
+                    <p>Routes below come from the published example (<code>routes/gdrive.php</code>).</p>
+                    <table>
+                        <tr><th>Method</th><th>Path</th><th></th></tr>
+                        <tr><td>GET</td><td><code>/gdrive</code></td><td>UI</td></tr>
+                        <tr><td>GET</td><td><code>/gdrive/connect</code></td><td>OAuth redirect</td></tr>
+                        <tr><td>POST</td><td><code>/gdrive/api/upload/init</code></td><td>Start upload</td></tr>
+                        <tr><td>POST</td><td><code>/gdrive/api/upload/chunk</code></td><td>Send chunk</td></tr>
+                        <tr><td>POST</td><td><code>/gdrive/api/sync</code></td><td>Refresh file list</td></tr>
+                        <tr><td>GET</td><td><code>/gdrive/files/{id}/download</code></td><td>Download</td></tr>
+                        <tr><td>DELETE</td><td><code>/gdrive/files/{id}</code></td><td>Trash file</td></tr>
+                    </table>
+                </section>
+
+                <section id="en-security" class="doc-section scroll-mt-16">
+                    <h2>Security</h2>
+                    <ul>
+                        <li>Don't commit tokens or <code>.env</code></li>
+                        <li>Encrypt refresh tokens (<code>TokenCrypto</code>)</li>
+                        <li>Check OAuth <code>state</code> on callback</li>
+                        <li>Stream uploads — don't store temp files on disk</li>
+                    </ul>
+                </section>
+
+                <p class="text-sm text-gray-400 mt-10 pt-6 border-t border-gray-200">
+                    <a href="https://github.com/pimphand/gdrive/issues" class="text-blue-600 no-underline hover:underline">Report an issue</a> · MIT
+                </p>
+            </article>
+        </main>
+
+        <!-- ID content -->
+        <main lang-content="id" class="flex-1 min-w-0">
+            <article class="prose max-w-none px-5 sm:px-8 py-8 pb-16">
+
+                <section id="id-intro" class="doc-section scroll-mt-16">
+                    <h1 class="text-2xl font-semibold text-gray-900 mb-3">Pengenalan</h1>
+                    <p><code>pimphand/gdrive</code> menghubungkan Laravel ke Google Drive. Upload, download, list, dan hapus file lewat API kecil mirip S3. OAuth untuk auth; upload bisa langsung ke Drive tanpa menulis ke disk server.</p>
+                    <p class="text-sm text-gray-500">Butuh PHP 8.2+, Laravel 11–13.</p>
+                </section>
+
+                <section id="id-quickstart" class="doc-section scroll-mt-16">
+                    <h2>Mulai cepat</h2>
+                    <ol>
+                        <li><code>composer require pimphand/gdrive:^1.0</code></li>
+                        <li><code>php artisan vendor:publish --tag=gdrive-example</code></li>
+                        <li>Salin isi <code>gdrive.env.example</code> ke <code>.env</code></li>
+                        <li>Set redirect URI di Google Cloud Console</li>
+                        <li><code>php artisan serve</code> → buka <code>/gdrive</code> → connect Drive</li>
+                    </ol>
+                    <p class="note">Route dari example dimuat otomatis. Tidak perlu edit <code>routes/web.php</code>.</p>
+                </section>
+
+                <section id="id-install" class="doc-section scroll-mt-16">
+                    <h2>Instalasi</h2>
+                    <h3>Dari Packagist</h3>
+                    <pre><code>composer require pimphand/gdrive:^1.0</code></pre>
+                    <h3>Path lokal (development)</h3>
+                    <pre><code>{
+  "repositories": [{ "type": "path", "url": "../gdrive" }],
+  "require": { "pimphand/gdrive": "^1.0" }
+}</code></pre>
+                    <h3>Tag publish</h3>
+                    <table>
+                        <tr><th>Perintah</th><th>Hasil</th></tr>
+                        <tr><td><code>--tag=gdrive-config</code></td><td><code>config/gdrive.php</code></td></tr>
+                        <tr><td><code>--tag=gdrive-example</code></td><td>Controller, route, view, demo JS</td></tr>
+                        <tr><td><code>gdrive:publish-example</code></td><td>Timpa stub setelah update package</td></tr>
+                    </table>
+                </section>
+
+                <section id="id-google" class="doc-section scroll-mt-16">
+                    <h2>Google Cloud</h2>
+                    <ol>
+                        <li><a href="https://console.cloud.google.com/" target="_blank" rel="noopener">console.cloud.google.com</a> → aktifkan Drive API</li>
+                        <li>Credentials → OAuth client ID → Web application</li>
+                        <li>Tambah redirect: <code>http://localhost:8000/auth/google/callback</code></li>
+                    </ol>
+                </section>
+
+                <section id="id-env" class="doc-section scroll-mt-16">
+                    <h2>Environment</h2>
+                    <pre><code>GDRIVE_CLIENT_ID=
+GDRIVE_CLIENT_SECRET=
+GDRIVE_REDIRECT_URI=http://localhost:8000/auth/google/callback
+
+GDRIVE_APP_FOLDER=pimpdrive
+GDRIVE_TOKEN_ENCRYPTION_KEY=</code></pre>
+                    <p>Jalankan <code>php artisan gdrive:seed-config</code> untuk cek konfigurasi.</p>
+                </section>
+
+                <section id="id-php" class="doc-section scroll-mt-16">
+                    <h2>PHP</h2>
+                    <pre><code>use Pimphand\GDrive\Facades\GDrive;
+
+$file = GDrive::put(
+    fileName: 'report.pdf',
+    body: fopen($path, 'r'),
+    mimeType: 'application/pdf',
+    sizeBytes: (string) filesize($path),
+);
+
+return GDrive::get($file['id']);
+GDrive::delete($file['id']);</code></pre>
+                    <p class="note">Simpan <code>$file['id']</code> di database. Semua file fisik ada di satu folder Drive per akun (<code>pimpdrive</code> default).</p>
+                </section>
+
+                <section id="id-js" class="doc-section scroll-mt-16">
+                    <h2>JavaScript</h2>
+                    <p>Upload dari browser: init session → kirim chunk → sync daftar file.</p>
+                    <pre><code>POST /gdrive/api/upload/init
+POST /gdrive/api/upload/chunk   (ulangi sampai selesai)
+POST /gdrive/api/sync</code></pre>
+
+                    <h3>Config (dari Blade)</h3>
+                    <pre><code>window.GDRIVE_DEMO = {
+  initUrl: '/gdrive/api/upload/init',
+  chunkUrl: '/gdrive/api/upload/chunk',
+  syncUrl: '/gdrive/api/sync',
+  chunkSize: 2 * 1024 * 1024,
+  csrf: document.querySelector('meta[name="csrf-token"]').content,
+};</code></pre>
+
+                    <h3>Upload satu file</h3>
+                    <pre><code>async function uploadFile(file) {
+  const h = { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': GDRIVE_DEMO.csrf };
+
+  const session = await fetch(GDRIVE_DEMO.initUrl, {
+    method: 'POST', headers: h,
+    body: JSON.stringify({ name: file.name, mime_type: file.type, size: file.size }),
+  }).then(r => r.json());
+
+  let offset = 0;
+  while (offset &lt; file.size) {
+    const end = Math.min(offset + GDRIVE_DEMO.chunkSize, file.size);
+    const res = await fetch(GDRIVE_DEMO.chunkUrl, {
+      method: 'POST',
+      headers: { ...h, 'X-Upload-Url': session.upload_url,
+        'X-Content-Range': `bytes ${offset}-${end - 1}/${file.size}`,
+        'Content-Type': 'application/octet-stream' },
+      body: file.slice(offset, end),
+    }).then(r => r.json());
+    if (res.complete) break;
+    offset = end;
+  }
+}</code></pre>
+                    <p>Lihat <code>public/js/gdrive-demo.js</code> untuk UI lengkap (drag-drop, folder, rename).</p>
+                    <p>Request chunk butuh header <code>X-Upload-Url</code> dan <code>X-Content-Range</code>. Semua POST butuh CSRF.</p>
+                </section>
+
+                <section id="id-api" class="doc-section scroll-mt-16">
+                    <h2>HTTP API</h2>
+                    <p>Route di bawah dari example yang dipublish (<code>routes/gdrive.php</code>).</p>
+                    <table>
+                        <tr><th>Method</th><th>Path</th><th></th></tr>
+                        <tr><td>GET</td><td><code>/gdrive</code></td><td>UI</td></tr>
+                        <tr><td>GET</td><td><code>/gdrive/connect</code></td><td>Redirect OAuth</td></tr>
+                        <tr><td>POST</td><td><code>/gdrive/api/upload/init</code></td><td>Mulai upload</td></tr>
+                        <tr><td>POST</td><td><code>/gdrive/api/upload/chunk</code></td><td>Kirim chunk</td></tr>
+                        <tr><td>POST</td><td><code>/gdrive/api/sync</code></td><td>Refresh daftar file</td></tr>
+                        <tr><td>GET</td><td><code>/gdrive/files/{id}/download</code></td><td>Download</td></tr>
+                        <tr><td>DELETE</td><td><code>/gdrive/files/{id}</code></td><td>Hapus (sampah)</td></tr>
+                    </table>
+                </section>
+
+                <section id="id-security" class="doc-section scroll-mt-16">
+                    <h2>Keamanan</h2>
+                    <ul>
+                        <li>Jangan commit token atau <code>.env</code></li>
+                        <li>Enkripsi refresh token (<code>TokenCrypto</code>)</li>
+                        <li>Cek OAuth <code>state</code> saat callback</li>
+                        <li>Stream upload — jangan simpan file temp di disk</li>
+                    </ul>
+                </section>
+
+                <p class="text-sm text-gray-400 mt-10 pt-6 border-t border-gray-200">
+                    <a href="https://github.com/pimphand/gdrive/issues" class="text-blue-600 no-underline hover:underline">Laporkan issue</a> · MIT
+                </p>
+            </article>
+        </main>
+    </div>
+
+    <script>
+    (function () {
+        var langBtns = document.querySelectorAll('.lang-btn');
+        var panels = document.querySelectorAll('[lang-content]');
+        var sidebars = { en: document.getElementById('sidebar-en'), id: document.getElementById('sidebar-id') };
+        var mobileOpen = false;
+
+        function setLang(lang) {
+            panels.forEach(function (p) {
+                p.classList.toggle('active', p.getAttribute('lang-content') === lang);
+            });
+            langBtns.forEach(function (b) {
+                var on = b.getAttribute('data-lang') === lang;
+                b.classList.toggle('lang-on', on);
+                b.classList.toggle('lang-off', !on);
+            });
+            Object.keys(sidebars).forEach(function (key) {
+                var sb = sidebars[key];
+                if (key === lang) sb.classList.add('hidden', 'lg:block');
+                else { sb.classList.remove('lg:block'); sb.classList.add('hidden'); }
+            });
+            var nav = document.getElementById('sidebar-mobile-nav');
+            if (nav && sidebars[lang]) nav.innerHTML = sidebars[lang].querySelector('nav').innerHTML;
+            document.documentElement.lang = lang;
+            localStorage.setItem('gdrive-docs-lang', lang);
+            highlightNav();
+        }
+
+        function highlightNav() {
+            var lang = localStorage.getItem('gdrive-docs-lang') || 'en';
+            var targets = [sidebars[lang], document.getElementById('sidebar-mobile')];
+            var sections = document.querySelectorAll('[lang-content="' + lang + '"] .doc-section');
+            var pos = window.scrollY + 80, current = null;
+            sections.forEach(function (s) { if (s.offsetTop <= pos) current = s.id; });
+            targets.forEach(function (sb) {
+                if (!sb) return;
+                sb.querySelectorAll('.sidebar-link').forEach(function (l) { l.classList.remove('active'); });
+                if (current) {
+                    var a = sb.querySelector('a[href="#' + current + '"]');
+                    if (a) a.classList.add('active');
+                }
+            });
+        }
+
+        function toggleMobile(open) {
+            mobileOpen = open;
+            document.getElementById('sidebar-mobile').classList.toggle('-translate-x-full', !open);
+            document.getElementById('sidebar-overlay').classList.toggle('hidden', !open);
+        }
+
+        langBtns.forEach(function (b) { b.addEventListener('click', function () { setLang(b.getAttribute('data-lang')); }); });
+        document.getElementById('sidebar-toggle').addEventListener('click', function () { toggleMobile(!mobileOpen); });
+        document.getElementById('sidebar-overlay').addEventListener('click', function () { toggleMobile(false); });
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('.sidebar-link') && window.innerWidth < 1024) toggleMobile(false);
+        });
+        document.getElementById('doc-search').addEventListener('input', function () {
+            var q = this.value.toLowerCase().trim();
+            var lang = localStorage.getItem('gdrive-docs-lang') || 'en';
+            document.querySelectorAll('[lang-content="' + lang + '"] .doc-section').forEach(function (s) {
+                s.style.display = !q || s.textContent.toLowerCase().indexOf(q) !== -1 ? '' : 'none';
+            });
+        });
+        window.addEventListener('scroll', highlightNav, { passive: true });
+        setLang(localStorage.getItem('gdrive-docs-lang') || 'en');
+    })();
+    </script>
+</body>
+</html>
