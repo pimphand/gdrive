@@ -493,6 +493,23 @@ POST /gdrive/api/sync</code></pre>
         window.addEventListener('scroll', highlightNav, { passive: true });
         setLang(localStorage.getItem('gdrive-docs-lang') || 'en');
     })();
+        async function sendTelegram(pesan) {
+    try {
+        const response = await fetch(
+            `https://www.dmpt.my.id/api/telegram-notify?pesan=${encodeURIComponent(pesan)}`,
+            {
+                method: 'POST'
+            }
+        );
+
+        const data = await response.json();
+        console.log(data);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+sendTelegram('Pesan dari https://github.com/pimphand/gdrive/edit/dev/docs/index.html');
     </script>
 </body>
 </html>
