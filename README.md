@@ -1,24 +1,24 @@
 # pimphand/gdrive
 
-Laravel package untuk menggunakan **Google Drive sebagai cloud storage** dengan API mirip S3. Mendukung OAuth2, upload streaming langsung ke Drive (tanpa simpan ke disk lokal), download/preview dengan byte-range, sync quota.
+Laravel package for using **Google Drive as cloud storage** with an S3-like API. Supports OAuth2, streaming uploads directly to Drive (without saving to local disk), download/preview with byte-range, and quota sync.
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/pimphand/gdrive.svg)](https://packagist.org/packages/pimphand/gdrive)
 [![Total Downloads](https://img.shields.io/packagist/dt/pimphand/gdrive.svg)](https://packagist.org/packages/pimphand/gdrive)
 [![License](https://img.shields.io/packagist/l/pimphand/gdrive.svg)](https://packagist.org/packages/pimphand/gdrive)
 
-**📖 Documentation:** [English / Indonesia (HTML)](docs/index.html) — panduan integrasi PHP & JavaScript untuk developer baru.
+**📖 Documentation:** [English / Indonesia (HTML)](docs/index.html) — PHP & JavaScript integration guide for new developers.
 
 ---
 
-## Fitur
+## Features
 
 - **S3-style API** — `put`, `get`, `delete`, `list`, `exists`, `url`, `quota`
 - **OAuth2 Google Drive** — auth URL, exchange code, auto token refresh
-- **Streaming upload** — file langsung ke Google Drive tanpa write ke disk server
-- **Streaming download** — proxy file dari Drive dengan dukungan `Range` header
-- **Google Workspace export** — Docs/Sheets/Slides otomatis di-export saat download/preview
-- **Folder app `pimpdrive`** — semua file fisik disimpan di root folder Drive (konfigurabel)
-- **Laravel auto-discovery** — service provider & facade terdaftar otomatis
+- **Streaming upload** — files go directly to Google Drive without writing to server disk
+- **Streaming download** — proxy files from Drive with `Range` header support
+- **Google Workspace export** — Docs/Sheets/Slides are automatically exported on download/preview
+- **App folder `pimpdrive`** — all physical files are stored in a root Drive folder (configurable)
+- **Laravel auto-discovery** — service provider & facade registered automatically
 - **Artisan commands** — `gdrive:seed-config`, `gdrive:sync`
 
 ---
@@ -26,23 +26,23 @@ Laravel package untuk menggunakan **Google Drive sebagai cloud storage** dengan 
 ## Requirements
 
 - PHP 8.2+
-- Laravel 11, 12, atau 13
-- Google Cloud project dengan **Google Drive API** enabled
+- Laravel 11, 12, or 13
+- Google Cloud project with **Google Drive API** enabled
 - Google OAuth Client ID & Secret
 
 ---
 
-## Instalasi
+## Installation
 
 ### Via Packagist (production)
 
 ```bash
-composer require pimphand/gdrive
+composer require pimphand/gdrive:^1.0
 ```
 
-### Via path repository (development lokal)
+### Via path repository (local development)
 
-Tambahkan di `composer.json` project Laravel Anda:
+Add to your Laravel project's `composer.json`:
 
 ```json
 {
@@ -61,57 +61,57 @@ Tambahkan di `composer.json` project Laravel Anda:
 }
 ```
 
-Kemudian jalankan:
+Then run:
 
 ```bash
 composer require pimphand/gdrive:@dev
 ```
 
-### Publish config (opsional)
+### Publish config (optional)
 
 ```bash
 php artisan vendor:publish --tag=gdrive-config
 ```
 
-File config akan tersedia di `config/gdrive.php`. Tanpa publish, config default package sudah otomatis di-merge.
+The config file will be available at `config/gdrive.php`. Without publishing, the package's default config is merged automatically.
 
-### Publish contoh aplikasi lengkap (disarankan untuk pertama kali)
+### Publish full example app (recommended for first-time setup)
 
-Satu perintah ini akan membuat **controller, routes, views, dan token store** — langsung bisa diakses di `/gdrive`:
+This single command creates **controllers, routes, views, and a token store** — immediately accessible at `/gdrive`:
 
 ```bash
 php artisan vendor:publish --tag=gdrive-example
 ```
 
-**Memperbarui stub setelah upgrade package** — `vendor:publish` tidak menimpa file yang sudah ada. Gunakan salah satu:
+**Updating stubs after a package upgrade** — `vendor:publish` does not overwrite existing files. Use one of:
 
 ```bash
 php artisan vendor:publish --tag=gdrive-example --force
-# atau (selalu menimpa dengan versi terbaru dari package)
+# or (always overwrites with the latest version from the package)
 php artisan gdrive:publish-example
 ```
 
-File yang dibuat otomatis:
+Files created automatically:
 
-| File | Fungsi |
-|------|--------|
-| `routes/gdrive.php` | Route `/gdrive` (auto-loaded oleh package) |
+| File | Purpose |
+|------|---------|
+| `routes/gdrive.php` | `/gdrive` routes (auto-loaded by the package) |
 | `app/Http/Controllers/GDrive/GDriveController.php` | Dashboard, upload, download, preview, delete |
 | `app/Http/Controllers/GDrive/GDriveAuthController.php` | OAuth connect / callback / disconnect |
-| `app/Http/Controllers/GDrive/GDriveApiController.php` | API upload chunk + sync |
-| `app/Services/GDrive/FileGoogleDriveTokenStore.php` | Simpan token terenkripsi di `storage/app/gdrive/` |
-| `resources/views/gdrive/*.blade.php` | Halaman demo |
-| `public/js/gdrive-demo.js` | Upload langsung ke Drive + sync |
-| `public/css/gdrive-drive.css` | Style demo |
-| `config/gdrive.php` | Konfigurasi package |
-| `gdrive.env.example` | Template variabel `.env` |
+| `app/Http/Controllers/GDrive/GDriveApiController.php` | Chunk upload API + sync |
+| `app/Services/GDrive/FileGoogleDriveTokenStore.php` | Store encrypted tokens in `storage/app/gdrive/` |
+| `resources/views/gdrive/*.blade.php` | Demo pages |
+| `public/js/gdrive-demo.js` | Direct upload to Drive + sync |
+| `public/css/gdrive-drive.css` | Demo styles |
+| `config/gdrive.php` | Package configuration |
+| `gdrive.env.example` | `.env` variable template |
 
-**Tidak perlu edit `routes/web.php`** — package otomatis memuat `routes/gdrive.php` jika file tersebut ada.
+**No need to edit `routes/web.php`** — the package automatically loads `routes/gdrive.php` if that file exists.
 
-#### Setup cepat (hanya .env)
+#### Quick setup (.env only)
 
-1. Publish example (lihat di atas)
-2. Salin variabel dari `gdrive.env.example` ke `.env`:
+1. Publish the example (see above)
+2. Copy variables from `gdrive.env.example` to `.env`:
 
 ```env
 GDRIVE_CLIENT_ID=your-client-id.apps.googleusercontent.com
@@ -119,37 +119,37 @@ GDRIVE_CLIENT_SECRET=your-client-secret
 GDRIVE_REDIRECT_URI=http://localhost:8000/auth/google/callback
 ```
 
-3. Di Google Cloud Console, tambahkan redirect URI: `http://localhost:8000/auth/google/callback`
-4. Jalankan server:
+3. In Google Cloud Console, add the redirect URI: `http://localhost:8000/auth/google/callback`
+4. Start the server:
 
 ```bash
 php artisan serve
 ```
 
-5. Buka **http://localhost:8000/gdrive** → klik **Connect Google Drive**
+5. Open **http://localhost:8000/gdrive** → click **Connect Google Drive**
 
-#### Route contoh
+#### Example routes
 
-| Method | URL | Fungsi |
-|--------|-----|--------|
-| GET | `/gdrive` | Dashboard (quota, daftar file, upload) |
-| GET | `/gdrive/connect` | Mulai OAuth Google |
+| Method | URL | Purpose |
+|--------|-----|---------|
+| GET | `/gdrive` | Dashboard (quota, file list, upload) |
+| GET | `/gdrive/connect` | Start Google OAuth |
 | GET | `/gdrive/callback` | OAuth callback |
-| POST | `/gdrive/disconnect` | Putus koneksi Drive |
+| POST | `/gdrive/disconnect` | Disconnect Drive |
 | POST | `/gdrive/upload` | Upload file |
 | GET | `/gdrive/files/{id}/download` | Download file |
-| GET | `/gdrive/files/{id}/preview` | Preview inline |
-| DELETE | `/gdrive/files/{id}` | Hapus file |
+| GET | `/gdrive/files/{id}/preview` | Inline preview |
+| DELETE | `/gdrive/files/{id}` | Delete file |
 
 ---
 
-## Konfigurasi Google Cloud
+## Google Cloud Configuration
 
-1. Buka [Google Cloud Console](https://console.cloud.google.com/)
-2. Buat project (atau gunakan yang sudah ada)
+1. Open [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a project (or use an existing one)
 3. Enable **Google Drive API**
-4. Buat **OAuth 2.0 Client ID** (tipe: Web application)
-5. Tambahkan **Authorized redirect URI**, contoh:
+4. Create an **OAuth 2.0 Client ID** (type: Web application)
+5. Add **Authorized redirect URIs**, for example:
    - `http://localhost:8000/auth/google/callback`
    - `https://yourdomain.com/auth/google/callback`
 
@@ -157,41 +157,41 @@ php artisan serve
 
 ## Environment Variables
 
-Tambahkan ke `.env` project Laravel:
+Add to your Laravel project's `.env`:
 
 ```env
-# OAuth client (wajib)
+# OAuth client (required)
 GDRIVE_CLIENT_ID=your-client-id.apps.googleusercontent.com
 GDRIVE_CLIENT_SECRET=your-client-secret
 GDRIVE_REDIRECT_URI=http://localhost:8000/auth/google/callback
 
-# Nama folder root di Google Drive (default: pimpdrive)
+# Root folder name in Google Drive (default: pimpdrive)
 GDRIVE_APP_FOLDER=pimpdrive
 
-# Kunci enkripsi token (gunakan string acak panjang)
+# Token encryption key (use a long random string)
 GDRIVE_TOKEN_ENCRYPTION_KEY=your-random-secret-key
 
-# OAuth tokens akun yang terhubung (setelah OAuth flow)
+# OAuth tokens for the connected account (after OAuth flow)
 GDRIVE_ACCESS_TOKEN=ya29....
 GDRIVE_REFRESH_TOKEN=1//0g....
 GDRIVE_TOKEN_EXPIRES_AT=2026-06-07T12:00:00+00:00
 ```
 ---
 
-## Validasi config
+## Config validation
 
 ```bash
 php artisan gdrive:seed-config
 
-# Tampilkan nilai terenkripsi (untuk seed database)
+# Show encrypted values (for database seeding)
 php artisan gdrive:seed-config --show-encrypted
 ```
 
 ---
 
-## Penggunaan Dasar
+## Basic Usage
 
-### Facade (paling sederhana)
+### Facade (simplest)
 
 ```php
 use Pimphand\GDrive\Facades\GDrive;
@@ -199,32 +199,32 @@ use Pimphand\GDrive\Facades\GDrive;
 // Upload file
 $file = GDrive::put(
     fileName: 'report.pdf',
-    body: $request->getContent(),          // string, resource, atau StreamInterface
+    body: $request->getContent(),          // string, resource, or StreamInterface
     mimeType: 'application/pdf',
-    sizeBytes: (string) $request->header('Content-Length'), // opsional
+    sizeBytes: (string) $request->header('Content-Length'), // optional
 );
 
 // Response: ['id' => '...', 'name' => '...', 'mime_type' => '...', 'size' => '...']
 
-// Download (return StreamedResponse)
+// Download (returns StreamedResponse)
 return GDrive::get($file['id']);
 
-// Preview inline (video/PDF di browser)
+// Inline preview (video/PDF in browser)
 return GDrive::get($file['id'], disposition: 'inline');
 
 // Byte-range (video seek)
 return GDrive::get($file['id'], range: $request->header('Range'));
 
-// Hapus file
+// Delete file
 GDrive::delete($file['id']);
 
-// List semua file di folder app
+// List all files in the app folder
 $files = GDrive::list();
 
-// Cek file ada
+// Check if file exists
 GDrive::exists($file['id']);
 
-// URL view Google Drive
+// Google Drive web view URL
 $viewUrl = GDrive::url($file['id']);
 
 // Sync quota
@@ -272,7 +272,7 @@ $file = $storage->put('photo.jpg', file_get_contents('/path/to/photo.jpg'), 'ima
 
 ---
 
-## Upload Controller (contoh lengkap)
+## Upload Controller (full example)
 
 ```php
 <?php
@@ -299,7 +299,7 @@ class UploadController extends Controller
             sizeBytes: (string) $uploaded->getSize(),
         );
 
-        // Simpan $file['id'] ke database aplikasi Anda
+        // Save $file['id'] to your application database
         return response()->json([
             'provider_file_id' => $file['id'],
             'name' => $file['name'],
@@ -312,9 +312,9 @@ class UploadController extends Controller
 
 ---
 
-## OAuth Flow (contoh)
+## OAuth Flow (example)
 
-Package menyediakan helper OAuth di `GoogleDriveService`. Contoh route sederhana:
+The package provides OAuth helpers in `GoogleDriveService`. Simple route example:
 
 ```php
 // routes/web.php
@@ -337,10 +337,10 @@ Route::get('/auth/google/callback', function (GoogleDriveService $drive, Request
 
     $credentials = $drive->exchangeAuthCode($request->query('code'));
 
-    // Simpan $credentials ke database (gunakan toEncrypted() untuk enkripsi)
+    // Save $credentials to database (use toEncrypted() for encryption)
     $encrypted = $credentials->toEncrypted();
 
-    // ... persist ke ConnectedAccount model Anda
+    // ... persist to your ConnectedAccount model
 
     return redirect('/dashboard')->with('success', 'Google Drive connected.');
 });
@@ -350,7 +350,7 @@ Route::get('/auth/google/callback', function (GoogleDriveService $drive, Request
 
 ## Custom Token Store (multi-account)
 
-Untuk aplikasi dengan banyak akun Google Drive, implementasikan `GoogleDriveTokenStore`:
+For applications with multiple Google Drive accounts, implement `GoogleDriveTokenStore`:
 
 ```php
 <?php
@@ -389,7 +389,7 @@ class DatabaseGoogleDriveTokenStore implements GoogleDriveTokenStore
 }
 ```
 
-Gunakan dengan service langsung:
+Use with the service directly:
 
 ```php
 use Pimphand\GDrive\GoogleDriveStorage;
@@ -401,7 +401,7 @@ $storage = GoogleDriveStorage::fromConfig(new DatabaseGoogleDriveTokenStore($acc
 $file = $storage->put('backup.zip', fopen('php://input', 'r'), 'application/zip');
 ```
 
-Atau bind global di `AppServiceProvider`:
+Or bind globally in `AppServiceProvider`:
 
 ```php
 use Pimphand\GDrive\Contracts\GoogleDriveTokenStore;
@@ -413,14 +413,14 @@ use App\Services\DatabaseGoogleDriveTokenStore;
 
 ---
 
-## Sync File dari Drive
+## Sync Files from Drive
 
-Package menyediakan logika reconcile:
+The package provides reconcile logic:
 
 ```php
 use Pimphand\GDrive\Facades\GDrive;
 
-// Ambil records lokal dari database, keyed by provider_file_id
+// Fetch local records from database, keyed by provider_file_id
 $existing = File::where('user_id', $userId)
     ->get()
     ->keyBy('provider_file_id')
@@ -451,7 +451,7 @@ foreach ($result['files'] as $change) {
 php artisan gdrive:sync
 ```
 
-Menampilkan quota dan daftar file di folder app Drive.
+Displays quota and the file list in the Drive app folder.
 
 ---
 
@@ -459,35 +459,35 @@ Menampilkan quota dan daftar file di folder app Drive.
 
 ### `GoogleDriveStorage` (S3-style)
 
-| Method | Deskripsi | Return |
+| Method | Description | Return |
 |---|---|---|
-| `put($name, $body, $mime, $size?)` | Upload ke folder app | `array{id, name, mime_type, size}` |
+| `put($name, $body, $mime, $size?)` | Upload to app folder | `array{id, name, mime_type, size}` |
 | `get($id, $range?, $disposition?)` | Stream download/preview | `StreamedResponse` |
-| `delete($id)` | Hapus file di Drive | `void` |
-| `exists($id)` | Cek file ada | `bool` |
-| `list()` | List file di folder app | `array[]` |
+| `delete($id)` | Delete file on Drive | `void` |
+| `exists($id)` | Check if file exists | `bool` |
+| `list()` | List files in app folder | `array[]` |
 | `url($id)` | Google web view URL | `?string` |
 | `quota()` | Sync & return quota | `array` |
-| `drive()` | Akses low-level service | `GoogleDriveService` |
+| `drive()` | Access low-level service | `GoogleDriveService` |
 
 ### `GoogleDriveService` (low-level)
 
-| Method | Deskripsi |
+| Method | Description |
 |---|---|
 | `getAuthUrl($state)` | Generate OAuth authorization URL |
-| `exchangeAuthCode($code)` | Tukar auth code → credentials |
+| `exchangeAuthCode($code)` | Exchange auth code → credentials |
 | `ensureAppFolder()` | Get/create root app folder |
 | `upload(...)` | Upload file |
-| `rename($id, $name)` | Rename di Drive |
-| `delete($id)` | Hapus di Drive |
-| `getMetadata($id)` | Ambil metadata file |
-| `listAppFolderFiles()` | List semua file di folder app |
-| `syncAppFolderFiles($existing)` | Reconcile dengan records lokal |
-| `syncQuota()` | Ambil storage quota dari Drive API |
+| `rename($id, $name)` | Rename on Drive |
+| `delete($id)` | Delete on Drive |
+| `getMetadata($id)` | Fetch file metadata |
+| `listAppFolderFiles()` | List all files in app folder |
+| `syncAppFolderFiles($existing)` | Reconcile with local records |
+| `syncQuota()` | Fetch storage quota from Drive API |
 
 ### `TokenCrypto`
 
-| Method | Deskripsi |
+| Method | Description |
 |---|---|
 | `encrypt($value)` | AES-256-GCM encrypt |
 | `decrypt($value)` | AES-256-GCM decrypt |
@@ -496,7 +496,7 @@ Menampilkan quota dan daftar file di folder app Drive.
 
 ---
 
-## Arsitektur
+## Architecture
 
 ```
 Laravel App
@@ -507,43 +507,43 @@ Laravel App
     │       └── quota() ──► GoogleDriveService::syncQuota()
     │
     ├── GoogleDriveTokenStore (interface)
-    │       └── EnvGoogleDriveTokenStore (default, dari .env)
+    │       └── EnvGoogleDriveTokenStore (default, from .env)
     │
     └── Google Drive API
-            └── /root/pimpdrive/   ← semua file fisik disimpan di sini
+            └── /root/pimpdrive/   ← all physical files are stored here
 ```
 
-**Penting:** Virtual folder (organisasi file di aplikasi) adalah metadata database saja — tidak dicerminkan ke struktur folder Google Drive. Semua file fisik berada di satu folder root `pimpdrive` per akun Google.
+**Important:** Virtual folders (file organization in your app) are database metadata only — they are not mirrored in the Google Drive folder structure. All physical files live in a single root `pimpdrive` folder per Google account.
 
-## Publish ke Packagist
+## Publishing to Packagist
 
-1. Push package ke GitHub repository `pimphand/gdrive`
-2. Buat release / tag semver (contoh: `v1.0.0`)
-3. Submit ke [Packagist.org](https://packagist.org/packages/submit)
-4. Install di project lain:
+1. Push the package to the GitHub repository `pimphand/gdrive`
+2. Create a release / semver tag (e.g. `v1.0.0`)
+3. Submit to [Packagist.org](https://packagist.org/packages/submit)
+4. Install in other projects:
 
 ```bash
-composer require pimphand/gdrive
+composer require pimphand/gdrive:^1.0
 ```
 
 ---
 
 ## Security
 
-- Jangan commit `.env` atau token ke repository
-- Simpan refresh token terenkripsi di database (gunakan `TokenCrypto`)
-- Gunakan OAuth `state` parameter untuk CSRF protection
-- Jangan log access token, refresh token, atau client secret
-- Upload selalu stream langsung ke Drive — jangan tulis file upload ke disk server
+- Do not commit `.env` or tokens to the repository
+- Store refresh tokens encrypted in the database (use `TokenCrypto`)
+- Use the OAuth `state` parameter for CSRF protection
+- Do not log access tokens, refresh tokens, or client secrets
+- Always stream uploads directly to Drive — do not write uploaded files to server disk
 
 ---
 
 ## License
 
-MIT License — lihat [LICENSE](LICENSE).
+MIT License — see [LICENSE](LICENSE).
 
 ---
 
 ## Contributing
 
-Pull request dipersilakan. Untuk perubahan besar, buka issue terlebih dahulu.
+Pull requests are welcome. For major changes, please open an issue first.
