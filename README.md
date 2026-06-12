@@ -37,8 +37,10 @@ Laravel package for using **Google Drive as cloud storage** with an S3-like API.
 ### Via Packagist (production)
 
 ```bash
-composer require pimphand/gdrive:^1.0
+composer require pimphand/gdrive
 ```
+
+Composer resolves and installs the **latest stable release** automatically (no version constraint needed).
 
 ### Via path repository (local development)
 
@@ -523,7 +525,7 @@ Laravel App
 4. Install in other projects:
 
 ```bash
-composer require pimphand/gdrive:^1.0
+composer require pimphand/gdrive
 ```
 
 ---
